@@ -23,9 +23,10 @@ void Init(const flecs::world& ecs)
 
 	SpawnAsteroids(ecs);
 
-	ecs.system<Asteroid, Velocity, Position>("AsteroidMovement")
+	ecs.system<Velocity, Position>("AsteroidMovement")
 			.kind(flecs::OnUpdate)
-			.each([](Asteroid&, Velocity& vel, Position& pos) {
+			.with<Asteroid>()
+			.each([](Velocity& vel, Position& pos) {
 				float deltaTime = GetFrameTime();
 				pos.val.x += vel.val.x * deltaTime;
 				pos.val.y += vel.val.y * deltaTime;

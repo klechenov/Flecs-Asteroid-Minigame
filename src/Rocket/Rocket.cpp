@@ -32,9 +32,10 @@ void Init(const flecs::world& ecs)
 			.set<Visual>({LoadTexture("res/rocket.png")})
 			.set<Size>({ROCKET_WIDTH, ROCKET_HEIGHT});
 
-	ecs.system<Rocket, Velocity, Position>("RocketMovement")
+	ecs.system<Velocity, Position>("RocketMovement")
 			.kind(flecs::OnUpdate)
-			.each([](Rocket&, Velocity& vel, Position& pos) {
+			.with<Rocket>()
+			.each([](Velocity& vel, Position& pos) {
 				float deltaTime = GetFrameTime();
 				pos.val.x += vel.val.x * deltaTime;
 				pos.val.y += vel.val.y * deltaTime;
