@@ -6,4 +6,4 @@ namespace game::Rendering
 
 void DrawDebugWindow();
 
-} // namespace game::Rendering
+}// namespace game::Rendering

@@ -10,4 +10,4 @@ void DrawDebugWindow()
 	ImGui::Text("Hi!");
 }
 
-} // namespace game::Rendering
+}// namespace game::Rendering

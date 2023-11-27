@@ -1,11 +1,12 @@
 #pragma once
 
 #include <flecs.h>
+#include <raylib.h>
 
 namespace game
 {
 
-class Game
+class Game final
 {
 public:
 	explicit Game();
@@ -15,4 +16,4 @@ private:
 	flecs::world mEcs{};
 };
 
-} // namespace game
+}// namespace game
