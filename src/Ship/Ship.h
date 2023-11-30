@@ -1,12 +1,11 @@
 #pragma once
 
 #include <flecs.h>
-#include <raylib.h>
 
 namespace game::Ship
 {
-// Tag
-struct Ship final {
+
+struct ShipTag {
 };
 
 void Init(const flecs::world& ecs);

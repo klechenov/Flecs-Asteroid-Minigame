@@ -9,28 +9,21 @@
 
 namespace game::Asteroid
 {
-using Velocity = game::Space::Velocity;
-using Position = game::Space::Position;
-using Size = game::Space::Size;
-using Visual = game::Rendering::Visual;
+using Velocity = Space::VelocityComponent;
+using Position = Space::PositionComponent;
+using Size = Space::SizeComponent;
+using Visual = Rendering::VisualComponent;
 
 void Init(const flecs::world& ecs)
 {
-	ecs.prefab("PAsteroid")
-			.add<Asteroid>()
-			.set<Visual>({LoadTexture("res/asteroid.png")})
-			.set<Size>({ASTEROID_WIDTH, ASTEROID_HEIGHT});
+	ecs.component<AsteroidTag>("AsteroidTag");
+
+	ecs.prefab<AsteroidPrefabTag>("PrefabAsteroid")
+			.add<AsteroidTag>()
+			.emplace<Visual>(2, LoadTexture("res/asteroid.png"))
+			.emplace<Size>(ASTEROID_WIDTH, ASTEROID_HEIGHT);
 
 	SpawnAsteroids(ecs);
-
-	ecs.system<Velocity, Position>("AsteroidMovement")
-			.kind(flecs::OnUpdate)
-			.with<Asteroid>()
-			.each([](Velocity& vel, Position& pos) {
-				float deltaTime = GetFrameTime();
-				pos.val.x += vel.val.x * deltaTime;
-				pos.val.y += vel.val.y * deltaTime;
-			});
 }
 
 // TODO: Temporary. Implement system that handle asteroids spawning
@@ -44,9 +37,9 @@ void SpawnAsteroids(const flecs::world& ecs)
 		Vector2 velocity = {std::cos(angle) * BIG_ASTEROID_SPEED, std::sin(angle) * BIG_ASTEROID_SPEED};
 
 		ecs.entity()
-				.is_a(ecs.prefab("PAsteroid"))
-				.set<Position>({position})
-				.set<Velocity>({velocity});
+				.is_a(ecs.prefab<AsteroidPrefabTag>())
+				.emplace<Position>(position)
+				.emplace<Velocity>(velocity);
 	}
 }
 

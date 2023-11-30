@@ -5,8 +5,11 @@
 
 namespace game::Rocket
 {
-// Tag
-struct Rocket final {
+
+struct RocketTag {
+};
+
+struct RocketPrefabTag {
 };
 
 void Init(const flecs::world& ecs);

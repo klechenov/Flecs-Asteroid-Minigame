@@ -12,7 +12,7 @@ enum class ButtonState
 	Released
 };
 
-struct Input final {
+struct InputComponent {
 	ButtonState thrust = ButtonState::Up;
 	ButtonState turnRight = ButtonState::Up;
 	ButtonState turnLeft = ButtonState::Up;

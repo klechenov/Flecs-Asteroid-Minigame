@@ -5,10 +5,13 @@
 
 namespace game::Rendering
 {
-struct Visual final {
+
+struct VisualComponent {
+	int zOrder;
 	Texture2D texture;
 };
 
-void Init(const flecs::world& ecs);
+void InitRender(const flecs::world& ecs);
+void InitSystems(const flecs::world& ecs);
 
 }// namespace game::Rendering

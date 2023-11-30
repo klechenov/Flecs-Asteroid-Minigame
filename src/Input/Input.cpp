@@ -26,16 +26,16 @@ void UpdateButtonState(ButtonState& state, int key)
 
 void Init(const flecs::world& ecs)
 {
-	ecs.component<Input>()
+	ecs.component<InputComponent>("InputComponent")
 			.member<ButtonState>("thrust")
 			.member<ButtonState>("turnRight")
 			.member<ButtonState>("turnLeft")
 			.member<ButtonState>("hyperJump")
 			.member<ButtonState>("shoot");
 
-	ecs.system<Input>("InputSystem")
+	ecs.system<InputComponent>("InputSystem")
 			.kind(flecs::PostLoad)
-			.each([](Input& input) {
+			.each([](InputComponent& input) {
 				UpdateButtonState(input.thrust, KEY_UP);
 				UpdateButtonState(input.turnRight, KEY_RIGHT);
 				UpdateButtonState(input.turnLeft, KEY_LEFT);

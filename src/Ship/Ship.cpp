@@ -11,33 +11,34 @@
 
 namespace game::Ship
 {
-using Input = game::Input::Input;
-using ButtonState = game::Input::ButtonState;
-using Velocity = game::Space::Velocity;
-using Position = game::Space::Position;
-using Rotation = game::Space::Rotation;
-using Size = game::Space::Size;
-using Visual = game::Rendering::Visual;
+using InputComponent = Input::InputComponent;
+using ButtonState = Input::ButtonState;
+using VelocityComponent = Space::VelocityComponent;
+using PositionComponent = Space::PositionComponent;
+using RotationComponent = Space::RotationComponent;
+using Size = Space::SizeComponent;
+using VisualComponent = Rendering::VisualComponent;
 
 void Init(const flecs::world& ecs)
 {
-	ecs.entity("Ship")
-			.add<Ship>()
-			.add<Input>()
-			.set<Visual>({LoadTexture("res/ship.png")})
-			.set<Velocity>({0, 0})
-			.set<Position>({{GetScreenWidth() * .5f, GetScreenHeight() * .5f}})
-			.set<Rotation>({0})
-			.set<Size>({SHIP_WIDTH, SHIP_HEIGHT});
+	ecs.component<ShipTag>("ShipTag");
 
-	ecs.system<const Input, Position, Velocity, Rotation>("ShipInputHandler")
+	const Vector2 shipPosition = {GetScreenWidth() * .5f, GetScreenHeight() * .5f};
+	ecs.entity("Ship")
+			.add<ShipTag>()
+			.emplace<InputComponent>()
+			.emplace<VisualComponent>(1, LoadTexture("res/ship.png"))
+			.emplace<VelocityComponent>(0.f, 0.f)
+			.emplace<PositionComponent>(shipPosition)
+			.emplace<RotationComponent>(0.f)
+			.emplace<Size>(SHIP_WIDTH, SHIP_HEIGHT);
+
+	ecs.system<const InputComponent, PositionComponent, VelocityComponent, RotationComponent>("ShipInputHandler")
 			.kind(flecs::OnUpdate)
-			.each([&ecs](const Input& input, Position& pos, Velocity& vel, Rotation& rot) {
+			.each([&ecs](const InputComponent& input, PositionComponent& pos, VelocityComponent& vel, RotationComponent& rot) {
 				if (input.shoot == ButtonState::Pressed)
 				{
-					// TODO: Creating new entities every frame can be costly if not managed properly.
-					// Implement a pooling system or limit the number of active rockets if needed.
-					game::Rocket::FireRocket(ecs, pos.val, rot.val);
+					Rocket::FireRocket(ecs, pos.val, rot.val);
 				}
 
 				const float deltaTime = GetFrameTime();

@@ -4,8 +4,11 @@
 
 namespace game::Asteroid
 {
-// Tag
-struct Asteroid final {
+
+struct AsteroidTag {
+};
+
+struct AsteroidPrefabTag {
 };
 
 void Init(const flecs::world& ecs);
