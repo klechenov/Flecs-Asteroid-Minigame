@@ -1,5 +1,7 @@
 #include "Ship.h"
 
+#include "Asteroid/Asteroid.h"
+#include "Collision/Collision.h"
 #include "Globals.h"
 #include "Input/Input.h"
 #include "Rendering/Renderer.h"
@@ -21,11 +23,10 @@ using VisualComponent = Rendering::VisualComponent;
 
 void Init(const flecs::world& ecs)
 {
-	ecs.component<ShipTag>("ShipTag");
-
 	const Vector2 shipPosition = {GetScreenWidth() * .5f, GetScreenHeight() * .5f};
 	ecs.entity("Ship")
 			.add<ShipTag>()
+			.add<Collision::CollisionRelationship, Asteroid::AsteroidTag>()
 			.emplace<InputComponent>()
 			.emplace<VisualComponent>(1, LoadTexture("res/ship.png"))
 			.emplace<VelocityComponent>(0.f, 0.f)
