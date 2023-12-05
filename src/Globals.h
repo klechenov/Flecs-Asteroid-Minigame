@@ -18,8 +18,16 @@ constexpr int ROCKET_WIDTH = 44;
 constexpr int ROCKET_HEIGHT = 76;
 constexpr float ROCKET_SPEED = 1000.f;
 
-constexpr int ASTEROID_WIDTH = 75;
-constexpr int ASTEROID_HEIGHT = 75;
-constexpr float BIG_ASTEROID_SPEED = 200.f;
+constexpr int BIG_ASTEROID_WIDTH = 75;
+constexpr int BIG_ASTEROID_HEIGHT = 75;
+constexpr float BIG_ASTEROID_SPEED = 100.f;
+constexpr int MEDIUM_ASTEROID_WIDTH = 45;
+constexpr int MEDIUM_ASTEROID_HEIGHT = 45;
+constexpr float MEDIUM_ASTEROID_SPEED = 150.f;
+constexpr int SMALL_ASTEROID_WIDTH = 25;
+constexpr int SMALL_ASTEROID_HEIGHT = 25;
+constexpr float SMALL_ASTEROID_SPEED = 200.f;
+constexpr size_t QUANTITY_INIT_ASTEROIDS = 6;
+constexpr size_t QUANTITY_AFTER_DESTROY_ASTEROIDS = 2;
 
 }// namespace game

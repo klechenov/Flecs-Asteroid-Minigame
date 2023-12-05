@@ -3,7 +3,9 @@
 #include <raylib.h>
 
 #include "Asteroid/Asteroid.h"
+#include "Collision/Collision.h"
 #include "Input/Input.h"
+#include "PlayerStat/PlayerStat.h"
 #include "Rendering/Renderer.h"
 #include "Rocket/Rocket.h"
 #include "Ship/Ship.h"
@@ -80,6 +82,8 @@ Game::Game()
 	game::Rendering::InitRender(mEcs);
 	game::Input::Init(mEcs);
 	game::Space::Init(mEcs);
+	game::PlayerStat::Init(mEcs);
+	game::Collision::Init(mEcs, mCollisionSystemQuery);
 	game::Ship::Init(mEcs);
 	game::Rocket::Init(mEcs);
 	game::Asteroid::Init(mEcs);
