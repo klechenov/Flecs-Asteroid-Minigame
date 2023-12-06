@@ -34,7 +34,7 @@ void Init(const flecs::world& ecs)
 	ecs.prefab<RocketPrefabTag>("PrefabRocket")
 			.add<RocketTag>()
 			.add<Collision::CollisionRelationship, Asteroid::AsteroidTag>()
-			.emplace<Visual>(0, LoadTexture("res/rocket.png"))
+			.emplace_override<Visual>(0, LoadTexture("res/rocket.png"))
 			.emplace<Size>(ROCKET_WIDTH, ROCKET_HEIGHT);
 }
 

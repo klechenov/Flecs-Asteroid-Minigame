@@ -24,7 +24,7 @@ void Init(const flecs::world& ecs)
 			.add<AsteroidTag>()
 			.add<Collision::CollisionRelationship, Ship::ShipTag>()
 			.add<Collision::CollisionRelationship, Rocket::RocketTag>()
-			.emplace<Visual>(2, LoadTexture("res/asteroid.png"))
+			.emplace_override<Visual>(2, LoadTexture("res/asteroid.png"))
 			.set_override<Size>({0, 0})
 			.set_override<AsteroidType>({AsteroidType::None});
 

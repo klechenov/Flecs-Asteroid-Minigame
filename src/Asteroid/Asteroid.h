@@ -75,6 +75,7 @@ void SpawnAsteroids(const flecs::world& ecs, size_t quantity, bool randomPositio
 		Vector2 asteroidPosition;
 		if (randomPosition)
 		{
+			// check ship position
 			asteroidPosition = {static_cast<float>(GetRandomValue(0, GetScreenWidth())),
 								static_cast<float>(GetRandomValue(0, GetScreenHeight()))};
 		}

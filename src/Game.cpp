@@ -83,7 +83,7 @@ Game::Game()
 	game::Input::Init(mEcs);
 	game::Space::Init(mEcs);
 	game::PlayerStat::Init(mEcs);
-	game::Collision::Init(mEcs, mCollisionSystemQuery);
+	game::Collision::Init(mEcs);
 	game::Ship::Init(mEcs);
 	game::Rocket::Init(mEcs);
 	game::Asteroid::Init(mEcs);

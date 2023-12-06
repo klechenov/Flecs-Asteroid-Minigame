@@ -36,65 +36,19 @@ void InitSystems(const flecs::world& ecs)
 			.kind(flecs::PreStore)
 			.each(PreDraw);
 
-	ecs.system<const VisualComponent, const Space::PositionComponent, const Space::SizeComponent, const Space::RotationComponent>("Renderer::DrawRocket")
+	//TODO: Waiting what Sander says about order_by PR
+	ecs.system<const VisualComponent, const Space::PositionComponent, const Space::SizeComponent, const Space::RotationComponent>("Renderer::DrawEntities")
 			.kind(flecs::PreStore)
 			.with<Rocket::RocketTag>()
-			.each([](flecs::entity entity, const VisualComponent& visual, const Space::PositionComponent& pos, const Space::SizeComponent& size, const Space::RotationComponent& rot) {
-				const Rectangle sourceRec = {0, 0, static_cast<float>(visual.texture.width), static_cast<float>(visual.texture.height)};
-				const Rectangle destRec = {pos.val.x, pos.val.y, static_cast<float>(size.width), static_cast<float>(size.height)};
-				const Vector2 origin = {static_cast<float>(size.width) * .5f, static_cast<float>(size.height) * .5f};
-
-				DrawTexturePro(visual.texture, sourceRec, destRec, origin, rot.val, WHITE);
-
-				// Debugging stuff
-				//DrawCircle(pos.val.x, pos.val.y, 10, BLUE);
-				//DrawRectangleLines(destRec.x - size.width * .5f, destRec.y - size.height * .5f, destRec.width, destRec.height, RED);
-			});
-
-	//TODO: Waiting what Sander says about order_by PR
-
-	//ecs.system<const VisualComponent, const Space::PositionComponent, const Space::SizeComponent, const Space::RotationComponent>("Renderer::DrawEntities")
-	//		.kind(flecs::PreStore)
-	//		.with<Rocket::RocketTag>()
-	//		.oper(flecs::Or)
-	//		.with<Ship::ShipTag>()
-	//		.oper(flecs::Or)
-	//		.with<Asteroid::AsteroidTag>()
-	//		.order_by<const VisualComponent>(
-	//				[](flecs::entity_t e1, const VisualComponent* p1,
-	//				   flecs::entity_t e2, const VisualComponent* p2) {
-	//						return (p1->zOrder > p2->zOrder) - (p1->zOrder < p2->zOrder);
-	//				})
-	//		.each([](flecs::entity entity, const VisualComponent& visual, const Space::PositionComponent& pos, const Space::SizeComponent& size, const Space::RotationComponent& rot) {
-	//			const Rectangle sourceRec = {0, 0, static_cast<float>(visual.texture.width), static_cast<float>(visual.texture.height)};
-	//			const Rectangle destRec = {pos.val.x, pos.val.y, static_cast<float>(size.width), static_cast<float>(size.height)};
-	//			const Vector2 origin = {static_cast<float>(size.width) * .5f, static_cast<float>(size.height) * .5f};
-
-	//			DrawTexturePro(visual.texture, sourceRec, destRec, origin, rot.val, WHITE);
-
-	//			// Debugging stuff
-	//			//DrawCircle(pos.val.x, pos.val.y, 10, BLUE);
-	//			//DrawRectangleLines(destRec.x - size.width * .5f, destRec.y - size.height * .5f, destRec.width, destRec.height, RED);
-	//		});
-
-	ecs.system<const VisualComponent, const Space::PositionComponent, const Space::SizeComponent, const Space::RotationComponent>("Renderer::DrawShip")
-			.kind(flecs::PreStore)
+			.oper(flecs::Or)
 			.with<Ship::ShipTag>()
-			.each([](flecs::entity entity, const VisualComponent& visual, const Space::PositionComponent& pos, const Space::SizeComponent& size, const Space::RotationComponent& rot) {
-				const Rectangle sourceRec = {0, 0, static_cast<float>(visual.texture.width), static_cast<float>(visual.texture.height)};
-				const Rectangle destRec = {pos.val.x, pos.val.y, static_cast<float>(size.width), static_cast<float>(size.height)};
-				const Vector2 origin = {static_cast<float>(size.width) * .5f, static_cast<float>(size.height) * .5f};
-
-				DrawTexturePro(visual.texture, sourceRec, destRec, origin, rot.val, WHITE);
-
-				// Debugging stuff
-				//DrawCircle(pos.val.x, pos.val.y, 10, BLUE);
-				//DrawRectangleLines(destRec.x - size.width * .5f, destRec.y - size.height * .5f, destRec.width, destRec.height, RED);
-			});
-
-	ecs.system<const VisualComponent, const Space::PositionComponent, const Space::SizeComponent, const Space::RotationComponent>("Renderer::DrawAsteroids")
-			.kind(flecs::PreStore)
+			.oper(flecs::Or)
 			.with<Asteroid::AsteroidTag>()
+			.order_by<const VisualComponent>(
+					[](flecs::entity_t e1, const VisualComponent* p1,
+					   flecs::entity_t e2, const VisualComponent* p2) {
+							return (p1->zOrder > p2->zOrder) - (p1->zOrder < p2->zOrder);
+					})
 			.each([](flecs::entity entity, const VisualComponent& visual, const Space::PositionComponent& pos, const Space::SizeComponent& size, const Space::RotationComponent& rot) {
 				const Rectangle sourceRec = {0, 0, static_cast<float>(visual.texture.width), static_cast<float>(visual.texture.height)};
 				const Rectangle destRec = {pos.val.x, pos.val.y, static_cast<float>(size.width), static_cast<float>(size.height)};

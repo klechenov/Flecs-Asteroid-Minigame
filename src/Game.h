@@ -8,8 +8,6 @@
 namespace game
 {
 
-using CollisionSystemQuery = flecs::query<const Space::PositionComponent, const Space::SizeComponent>;
-
 class Game final
 {
 public:
@@ -18,7 +16,6 @@ public:
 
 private:
 	flecs::world mEcs{};
-	CollisionSystemQuery mCollisionSystemQuery{};
 };
 
 }// namespace game

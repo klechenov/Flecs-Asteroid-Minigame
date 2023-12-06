@@ -22,7 +22,7 @@ struct CollisionRelationship {
 struct CollidedWith {
 };
 
-void Init(const flecs::world& ecs, CollisionSystemQuery& Query);
+void Init(const flecs::world& ecs);
 AABB CalculateAABB(const Position& center, const Size& size);
 bool IsColliding(const AABB& aabb1, const AABB& aabb2);
 

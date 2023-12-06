@@ -10,7 +10,9 @@
 namespace game::Collision
 {
 
-void Init(const flecs::world& ecs, CollisionSystemQuery& Query)
+using CollisionSystemQuery = flecs::query<const Space::PositionComponent, const Space::SizeComponent>;
+
+void Init(const flecs::world& ecs)
 {
 	ecs.component<CollidedWith>("CollidedWith");
 
@@ -22,20 +24,16 @@ void Init(const flecs::world& ecs, CollisionSystemQuery& Query)
 				DrawRectangleLines(static_cast<int>(aabb.min.x), static_cast<int>(aabb.min.y), width, height, YELLOW);
 			});
 
-	Query = ecs.query_builder<const Position, const Size>("CollisionSystemQuery")
+	CollisionSystemQuery query = ecs.query_builder<const Position, const Size>("CollisionSystemQuery")
 					.with<CollisionRelationship>(flecs::Wildcard)
 					.build();
 
 	ecs.system<const Position, const Size>("CollisionDetectionSystem")
 			.kind(flecs::OnValidate)
 			.write<CollidedWith>()
-			.ctx(&Query)
-			.each([](flecs::iter& it1, size_t index1, const Position& pos1, const Size& size1) {
-				const CollisionSystemQuery* q = it1.ctx<CollisionSystemQuery>();
-				flecs::entity e1 = it1.entity(index1);
-
-				q->each([&e1, &pos1, &size1](flecs::iter& it2, size_t index2, const Position pos2, const Size size2) {
-					flecs::entity e2 = it2.entity(index2);
+			.each([query = std::move(query)](flecs::entity e1, const Position& pos1, const Size& size1) {
+				query.each([&e1, &pos1, &size1](flecs::iter& it2, size_t index2, const Position pos2, const Size size2) {
+					const flecs::entity e2 = it2.entity(index2);
 					if (e1 == e2)
 					{
 						return;
@@ -46,7 +44,7 @@ void Init(const flecs::world& ecs, CollisionSystemQuery& Query)
 						return;
 					}
 
-					flecs::entity tag = it2.pair(3).second();
+					const flecs::entity tag = it2.pair(3).second();
 					if (!e1.has(tag))
 					{
 						return;
