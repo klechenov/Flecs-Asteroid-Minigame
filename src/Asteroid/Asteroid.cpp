@@ -65,5 +65,42 @@ void HandleAsteroidDestroyed(flecs::entity asteroid)
 	}
 }
 
+std::optional<Vector2> GenerateSafeAsteroidPosition(const flecs::world& ecs, const Vector2& shipPosition)
+{
+	const int screenWidth = GetScreenWidth();
+	const int screenHeight = GetScreenHeight();
+
+	const float safeZoneLeft = std::max(shipPosition.x - SAFE_ZONE_HALF_SIZE, 0.0f);
+	const float safeZoneRight = std::min(shipPosition.x + SAFE_ZONE_HALF_SIZE, static_cast<float>(screenWidth));
+	const float safeZoneTop = std::max(shipPosition.y - SAFE_ZONE_HALF_SIZE, 0.0f);
+	const float safeZoneBottom = std::min(shipPosition.y + SAFE_ZONE_HALF_SIZE, static_cast<float>(screenHeight));
+
+	Vector2 asteroidPosition;
+	const int side = GetRandomValue(0, 3);
+	switch (side)
+	{
+		case 0:
+			asteroidPosition.x = static_cast<float>(GetRandomValue(0, screenWidth));
+			asteroidPosition.y = static_cast<float>(GetRandomValue(0, static_cast<int>(safeZoneTop)));
+			break;
+		case 1:
+			asteroidPosition.x = static_cast<float>(GetRandomValue(0, screenWidth));
+			asteroidPosition.y = static_cast<float>(GetRandomValue(static_cast<int>(safeZoneBottom), screenHeight));
+			break;
+		case 2:
+			asteroidPosition.x = static_cast<float>(GetRandomValue(0, static_cast<int>(safeZoneLeft)));
+			asteroidPosition.y = static_cast<float>(GetRandomValue(0, screenHeight));
+			break;
+		case 3:
+			asteroidPosition.x = static_cast<float>(GetRandomValue(static_cast<int>(safeZoneRight), screenWidth));
+			asteroidPosition.y = static_cast<float>(GetRandomValue(0, screenHeight));
+			break;
+		default:
+			break;
+	}
+
+	return asteroidPosition;
+}
+
 
 }// namespace game::Asteroid

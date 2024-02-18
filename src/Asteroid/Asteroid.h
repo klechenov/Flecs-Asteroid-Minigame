@@ -1,9 +1,11 @@
 #pragma once
 
-#include "Globals.h"
-
 #include <flecs.h>
 #include <raylib.h>
+#include <optional>
+
+#include "Globals.h"
+#include "Space/Space.h"
 
 namespace game::Asteroid
 {
@@ -67,6 +69,8 @@ public:
 void Init(const flecs::world& ecs);
 void HandleAsteroidDestroyed(flecs::entity);
 
+std::optional<Vector2> GenerateSafeAsteroidPosition(const flecs::world& ecs, const Vector2& shipPosition);
+
 template<typename T>
 void SpawnAsteroids(const flecs::world& ecs, size_t quantity, bool randomPosition = true, const Vector2& position = Vector2())
 {
@@ -75,17 +79,32 @@ void SpawnAsteroids(const flecs::world& ecs, size_t quantity, bool randomPositio
 		Vector2 asteroidPosition;
 		if (randomPosition)
 		{
-			// check ship position
-			asteroidPosition = {static_cast<float>(GetRandomValue(0, GetScreenWidth())),
-								static_cast<float>(GetRandomValue(0, GetScreenHeight()))};
+			Vector2 shipPosition;
+			auto rule = ecs.rule_builder<const Space::PositionComponent>()
+								.with<Ship::ShipTag>()
+								.build();
+			rule.each([&shipPosition](flecs::entity shipEntity, const Space::PositionComponent& pos) {
+				shipPosition = pos.val;
+			});
+			rule.destruct();
+
+			auto safePosition = GenerateSafeAsteroidPosition(ecs, shipPosition);
+			if (safePosition)
+			{
+				asteroidPosition = *safePosition;
+			}
+			else
+			{
+				assert(false);
+			}
 		}
 		else
 		{
 			asteroidPosition = position;
 		}
 
-		const float rotation = GetRandomValue(0, 360) * DEG2RAD;
-		Vector2 velocity = {std::cos(rotation) * AsteroidSpeed<T>::GetSpeed(), std::sin(rotation) * AsteroidSpeed<T>::GetSpeed()};
+		const float rotation = static_cast<float>(GetRandomValue(0, 360)) * DEG2RAD;
+		const Vector2 velocity = {std::cos(rotation) * AsteroidSpeed<T>::GetSpeed(), std::sin(rotation) * AsteroidSpeed<T>::GetSpeed()};
 
 		ecs.entity()
 				.is_a(ecs.prefab<T>())

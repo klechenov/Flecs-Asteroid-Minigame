@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 FetchContent_Declare(
         flecs
         GIT_REPOSITORY https://github.com/SanderMertens/flecs
-        GIT_TAG v3.2.9
+        GIT_TAG v3.2.11
 )
 FetchContent_MakeAvailable(flecs)
 

@@ -30,4 +30,6 @@ constexpr float SMALL_ASTEROID_SPEED = 200.f;
 constexpr size_t QUANTITY_INIT_ASTEROIDS = 6;
 constexpr size_t QUANTITY_AFTER_DESTROY_ASTEROIDS = 2;
 
+constexpr int SAFE_ZONE_HALF_SIZE = 400;
+
 }// namespace game
